@@ -1,0 +1,35 @@
+def bellman_ford(graph, start):
+    distances = {node: float('inf') for node in graph}
+    distances[start] = 0
+    
+    # Relax edges repeatedly
+    for _ in range(len(graph) - 1):
+        for node in graph:
+            for neighbor, weight in graph[node].items():
+                if distances[node] + weight < distances[neighbor]:
+                    distances[neighbor] = distances[node] + weight
+    
+    # Check for negative cycles
+    for node in graph:
+        for neighbor, weight in graph[node].items():
+            if distances[node] + weight < distances[neighbor]:
+                raise ValueError("Graph contains negative cycle")
+    
+    return distances
+
+# New graph with different values, attributes, and functions
+new_graph = {
+    'P': {'Q': 3, 'R': 6},
+    'Q': {'P': 3, 'R': 2, 'S': -4},
+    'R': {'P': 6, 'Q': 2, 'S': 1},
+    'S': {'Q': -4, 'R': 1}
+}
+
+start_node = 'P'
+try:
+    shortest_distances = bellman_ford(new_graph, start_node)
+    print("Shortest distances from node", start_node + ":")
+    for node, distance in shortest_distances.items():
+        print(node, "-", distance)
+except ValueError as e:
+    print(e)

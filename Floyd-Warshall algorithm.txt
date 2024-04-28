@@ -1,0 +1,26 @@
+def floyd_warshall(graph):
+    # Initialize distances matrix with direct edges and infinity for non-direct edges
+    distances = {v: {w: graph[v][w] if v != w else float('inf') for w in graph} for v in graph}
+    
+    # Calculate shortest paths through intermediate nodes
+    for k in graph:
+        for i in graph:
+            for j in graph:
+                if distances[i][j] > distances[i][k] + distances[k][j]:
+                    distances[i][j] = distances[i][k] + distances[k][j]
+    
+    return distances
+
+# New example graph with different values, attributes, and functions
+new_graph = {
+    'X': {'Y': 5, 'Z': 2},
+    'Y': {'X': 3, 'Z': 4},
+    'Z': {'X': 6, 'Y': 1}
+}
+
+shortest_distances = floyd_warshall(new_graph)
+
+print("Shortest distances between all pairs of vertices:")
+for start_node in shortest_distances:
+    for end_node, distance in shortest_distances[start_node].items():
+        print(start_node + " -> " + end_node + ":", distance)

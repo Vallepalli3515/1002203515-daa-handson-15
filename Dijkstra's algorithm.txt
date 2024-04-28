@@ -1,0 +1,51 @@
+import heapq
+
+class Graph:
+    def __init__(self):
+        self.graph = {}
+
+    def add_node(self, node):
+        if node not in self.graph:
+            self.graph[node] = {}
+
+    def add_edge(self, start, end, weight):
+        self.add_node(start)
+        self.add_node(end)
+        self.graph[start][end] = weight
+
+    def dijkstra(self, start):
+        distances = {node: float('inf') for node in self.graph}
+        distances[start] = 0
+        queue = [(0, start)]
+        
+        while queue:
+            current_distance, current_node = heapq.heappop(queue)
+            
+            if current_distance > distances[current_node]:
+                continue
+            
+            for neighbor, weight in self.graph[current_node].items():
+                distance = current_distance + weight
+                if distance < distances[neighbor]:
+                    distances[neighbor] = distance
+                    heapq.heappush(queue, (distance, neighbor))
+        
+        return distances
+
+    def get_shortest_distances(self, start_node):
+        return self.dijkstra(start_node)
+
+# Example usage:
+g = Graph()
+g.add_edge('A', 'B', 1)
+g.add_edge('A', 'C', 4)
+g.add_edge('B', 'C', 2)
+g.add_edge('B', 'D', 5)
+g.add_edge('C', 'D', 1)
+
+start_node = 'A'
+shortest_distances = g.get_shortest_distances(start_node)
+
+print("Shortest distances from node", start_node + ":")
+for node, distance in shortest_distances.items():
+    print(node, "-", distance)
